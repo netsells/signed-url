@@ -22,7 +22,11 @@ class Provider extends ServiceProvider
             return new SignedUrl();
         });
 
-        $router->aliasMiddleware('signed-url', config('signed-url.middleware'));
+        if (method_exists($this->app['router'], 'middleware')) {
+            $this->app['router']->middleware('signed-url', config('signed-url.middleware'));
+        } else {
+            $this->app['router']->aliasMiddleware('signed-url', config('signed-url.middleware'));
+        }
 
         $this->app->alias(SignedUrl::class, 'signed-url');
     }
